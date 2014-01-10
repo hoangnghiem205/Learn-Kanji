@@ -1,0 +1,66 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/ship.js"></script>
+        <script type="text/javascript" src="js/plasma.js"></script>
+        <script type="text/javascript" src="js/missle.js"></script>
+        <script type="text/javascript" src="js/animated.js"></script>
+        <script type="text/javascript" src="js/data.js"></script>
+        <script type="text/javascript" src="js/game.js"></script>
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+                $('#gamemenu').show();
+
+                $('#back').click(function(){
+                    $('.gamelayer').hide();
+                    $('#gamemenu').show();
+                });
+                
+                $('#start').click(function(){
+                    $('.gamelayer').hide();
+                    $('#mycanvas').show();
+                    init();
+                });
+            });
+        </script>
+        <style>
+        #gamecontainer {width: 360px; height: 640px; border: 1px solid black;background-image: url('img/backdrop.png');}
+        #mycanvas{ }
+        #gamemenu{padding-top: 200px; text-align: center;}
+        #endgame{padding-top: 200px; text-align: center;}
+        #levelclear{padding-top: 200px; text-align: center;}
+        .gamelayer{width: 360px; height: 640px; position: absolute; display: none;}
+        .title{color:white; font-size: 26px; display: block;}
+        .tut{color:white; font-size: 14px; display: block; margin-top: 50px; font-style: italic;}
+        .button{color: white;font-size: 14px; margin-top: 50px; display: block;}
+        .button:hover {color: red;cursor: pointer;}
+        .copyright{color:white; font-size: 12px; display: block; margin-top: 220px;}
+        </style>
+    </head>
+    <body>
+        <div id="gamecontainer">
+            <canvas tabindex="0" id="mycanvas" width="360" height="640" class="gamelayer"></canvas>
+            <div id="gamemenu" class="gamelayer">
+                <span class="title">LEARN KANJI</span>
+                <span class="tut">Type to shot!</span>
+                <span id="start" class="button">START GAME</span>
+                <span class="copyright">Programing: Nghiem Minh Hoang</span>
+            </div>
+            <div id="levelclear" class="gamelayer">
+                <span class="title"></span>
+            </div>
+            <div id="endgame" class="gamelayer">
+                <span class="title">GAME FINISHED</span>
+                <span id="back" class="button">Back to Menu</span>
+            </div>
+        </div>
+    </body>
+</html>
