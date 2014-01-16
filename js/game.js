@@ -22,7 +22,9 @@ function init() {
     _canvas = document.getElementById("mycanvas");
     _context = _canvas.getContext("2d");
     _canvas.onkeydown = canvas_keyDown;
+    $("#text").html("");
 
+    // Khoi tao thong tin moi cho game
     _ship = new Ship(_canvas.width, _canvas.height);
     _p = [];
     tempValue = "";
@@ -30,12 +32,14 @@ function init() {
     _currentIndex = -1
     finished = false;
     endgame = false;
-
-
-    for (var i = 0; i < level[curLevel].length; i++) {
-        var e = new Missle(_canvas.width, _canvas.height, level[curLevel][i]);
+    
+    // Khoi tao quan thu
+    for (var i = 0; i < level[curLevel%level.length].length; i++) {
+        var e = new Enemy(_canvas.width, _canvas.height, level[curLevel][i]);
         _m.push(e);
     }
+
+    // Khoi tao chay no
     _animated = new Animated({
         mapWidth: _canvas.width,
         mapHeight: _canvas.height,
@@ -78,12 +82,14 @@ function draw() {
     }
 }
 
+
 function update() {
 
+
     var flag;
-    
+    //Kiem tra ket thuc, khi tat ca cac ke thu da het
     for (var i = 0; i < _m.length; i++) {
-        if (_m[i].ypos > _canvas.height) {flag = false;break;}
+        if (_m[i].ypos > _canvas.height) {curLevel = 100; flag = false;break;}
         flag |= _m[i].avaiable;
     }
     if (_ship.isDied) {
@@ -93,8 +99,9 @@ function update() {
 
 	_ship.update();
 
+    //  Tinh goc quay cho phi thuyen, de ban' trung' ke thu`
 	if (_currentIndex !== -1) {
-	    var tan = (_ship.ypos - _m[_currentIndex].ypos - 13) / (_ship.xpos - _m[_currentIndex].xpos - 10);
+	    var tan = (_ship.ypos - _m[_currentIndex].ypos - (_m[_currentIndex].img.height / 2)) / (_ship.xpos - _m[_currentIndex].xpos - (_m[_currentIndex].img.width / 2));
 	    _ship.angle = Math.round((Math.atan(tan) * 180 / Math.PI));
 
 	    if (_ship.angle > 0) {
@@ -104,8 +111,16 @@ function update() {
 		}
     }
 
+    // Kiem tra va cham phi thuyen
     for (var i = 0; i < _m.length; i++)
     {
+        if (_m[i].isShooting) {
+            var e = new Enemy(_canvas.width, _canvas.height, missleData[Math.round((Math.random() * 10) % (missleData.length - 1) )], _m[i].xpos, _m[i].ypos);
+            e.v = 0.7;
+            
+            _m.push(e);    
+            _m[i].isShooting = false;
+        }
     	if (_ship.collide(_m[i])) {
     		_m[i].avaiable = false;
     		_ship.isDied = true;
@@ -123,7 +138,7 @@ function update() {
                 var check = _m[_currentIndex].collide(_p[i]);
 
                 if (check) {
-                    _animated.setPostion(_m[_currentIndex].xpos, _m[_currentIndex].ypos, true);
+                    _animated.setPostion(_m[_currentIndex].xpos + (_m[_currentIndex].img.width / 2), _m[_currentIndex].ypos + (_m[_currentIndex].img.height / 2), true);
                     _animated.show();
                     _p[i].avaiable = 0;
 
@@ -131,6 +146,7 @@ function update() {
 					if (_m[_currentIndex].value === "") {
 						_m[_currentIndex].avaiable = false;
             			_currentIndex = -1;
+                        $("#text").html("");
         			}            
                     
                 }
@@ -142,15 +158,18 @@ function update() {
         }
     }
 
+    // No
     if (_animated) {
         _animated.update();
     }
     draw();
 
+    // Kiem tra ket thuc
     if (finished) {
         finished = false;
 
-        if ((curLevel + 1) < level.length) {
+        // Neu level chua phai la cuoi cung
+        if (((curLevel + 1) < level.length) && !_ship.isDied) {
             $('.gamelayer').hide();
             $('#levelclear .title').text("LEVEL " + (curLevel+1) + " CLEAR");
             $('#levelclear').fadeIn("slow");
@@ -164,10 +183,12 @@ function update() {
                     $('#levelclear').removeAttr("style");
                     init();
             });
+            // Neu level cuoi cung thi -> end game
         } else {
             console.log("Game over");
-        $('.gamelayer').hide();
-        $('#endgame').fadeIn("slow");
+            $('.gamelayer').hide();
+            $('#endgame').fadeIn("slow");
+            curLevel = 0;
         }
         clearInterval(_timer);
         
@@ -178,6 +199,7 @@ function update() {
 function canvas_keyDown(e) {
 
     var key = String.fromCharCode(e.keyCode).toLowerCase();
+
     if (_currentIndex !== -1) {
         if (_m[_currentIndex].value.indexOf(key) === 0 || tempValue.indexOf(key) === 0) {
             var item = new Plasma(_canvas.width, _canvas.height);
@@ -185,6 +207,7 @@ function canvas_keyDown(e) {
             _p.push(item);
             tempValue = tempValue.substring(1,tempValue.length);
             _ship.shot();
+            $("#text").append(key);
         }
     } else {
         for (var i = 0; i < _m.length; i++)
@@ -198,6 +221,7 @@ function canvas_keyDown(e) {
                 item.show(_context, _ship.xpos, _ship.ypos);
                 _p.push(item);
                 _ship.shot();
+                $("#text").append(key);
                 break;
             }
         }

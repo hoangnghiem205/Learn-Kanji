@@ -38,19 +38,22 @@
         #gamemenu{padding-top: 200px; text-align: center;}
         #endgame{padding-top: 200px; text-align: center;}
         #levelclear{padding-top: 200px; text-align: center;}
+        #text{background-color: gray;position: absolute; display: block; top: 500px; left: 150px; z-index: 1000; color: white;-webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;}
         .gamelayer{width: 360px; height: 640px; position: absolute; display: none;}
         .title{color:white; font-size: 26px; display: block;}
         .tut{color:white; font-size: 14px; display: block; margin-top: 50px; font-style: italic;}
         .button{color: white;font-size: 14px; margin-top: 50px; display: block;}
         .button:hover {color: red;cursor: pointer;}
         .copyright{color:white; font-size: 12px; display: block; margin-top: 220px;}
+        .transparent {zoom: 1;filter: alpha(opacity=50);opacity: 0.5;}
         </style>
     </head>
     <body>
+    
         <div id="gamecontainer">
             <canvas tabindex="0" id="mycanvas" width="360" height="640" class="gamelayer"></canvas>
             <div id="gamemenu" class="gamelayer">
-                <span class="title">LEARN KANJI</span>
+                <span class="title">KANJI SHOTTING</span>
                 <span class="tut">Type to shot!</span>
                 <span id="start" class="button">START GAME</span>
                 <span class="copyright">Programing: Nghiem Minh Hoang</span>
@@ -62,6 +65,7 @@
                 <span class="title">GAME FINISHED</span>
                 <span id="back" class="button">Back to Menu</span>
             </div>
+            <div id="text" class="transparent"></div>
         </div>
     </body>
 </html>
